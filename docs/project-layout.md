@@ -6,33 +6,18 @@
 src/
   main.c              # CLI dispatcher — parses arguments and routes to puzzle
   common/
-    containers.h      # Dynamic arrays, stacks, queues
-    containers.c
-    pathfinding.h     # Graph algorithms: BFS, DFS, A*, etc.
-    pathfinding.c
-    math_utils.h      # Math utilities: GCD, modular arithmetic, etc.
-    math_utils.c
-  2024/
-    day01.c           # Puzzle solution for 2024 day 1
-    day01.h           # Exports: day_2024_01_part1(), day_2024_01_part2()
-    day02.c
-    day02.h
-  2025/
-    day01.c
-    day01.h
+    aoc_value.h / aoc_value.c  # Tagged-union answer value type (AocValue)
+  2015/
+    day01.c           # Puzzle solution for 2015 day 1
+    day01.h           # Exports: y2015d01p1(), y2015d01p2()
 
 data/
-  2024/
-    day01.txt         # Input file (from Advent of Code)
-    day02.txt
-  2025/
+  2015/
     day01.txt
 
 tests/
-  2024/
-    day01_test.c      # Unit tests for 2024 day 1
-  2025/
-    day01_test.c
+  2015/
+    day01_test.c      # Unit tests for 2015 day 1
 
 docs/                 # Documentation
   project-layout.md   # This file
@@ -51,27 +36,25 @@ README.md             # Project overview and quick start
 ### Main Dispatcher (`src/main.c`)
 Parses command-line arguments and routes to puzzle functions.
 
-**You write this file.** It should:
-- Parse `year`, `day`, and optional `part` arguments
-- Load the input file from `data/YYYY/dayDD.txt`
-- Call the appropriate function from the puzzle solution
-- Handle errors gracefully
-
-Example usage:
-```c
-aoc 2024 1          // Run 2024 day 1, both parts
-aoc 2024 1 1        // Run 2024 day 1, part 1 only
-aoc 2024 1 2        // Run 2024 day 1, part 2 only
+Supported invocations:
+```bash
+aoc <year> <day> <part>   # run a specific part and print the answer
+aoc <year> <day>          # validate year/day arguments
+aoc <year>                # validate year argument
 ```
 
+The dispatcher:
+- Opens `data/YYYY/dayDD.txt` for the requested puzzle
+- Calls `yYYYYdDDpN(file)` and prints the returned `AocValue`
+- Calls `aoc_value_free()` and `free()` to clean up
+
 ### Common Utilities (`src/common/`)
-Shared code organized by category:
+Shared code organized by category. Currently contains:
 
-- **containers.h/c** — Data structures (dynamic arrays, linked lists, stacks, queues, hash tables)
-- **pathfinding.h/c** — Graph algorithms (BFS, DFS, A*, Dijkstra)
-- **math_utils.h/c** — Math helpers (GCD, LCM, modular arithmetic, prime factorization)
+- **aoc_value.h/c** — Tagged-union answer type (`AocValue`) and helpers
 
-Each category is a separate header/source pair. This keeps utilities modular and easy to maintain.
+As puzzles grow, additional modules will be added here (e.g., containers, pathfinding, math helpers).
+Each category should be a separate header/source pair.
 
 ### Puzzle Solutions (`src/YYYY/dayDD.c/h`)
 One file per puzzle containing:
@@ -81,12 +64,14 @@ One file per puzzle containing:
 
 Each puzzle exports two functions:
 ```c
-// In src/2024/day01.h
-void day_2024_01_part1(FILE *input_file);
-void day_2024_01_part2(FILE *input_file);
+// In src/2015/day01.h
+AocValue *y2015d01p1(FILE *input_file);
+AocValue *y2015d01p2(FILE *input_file);
 ```
 
-Parsing and solving are in the same file because they're tightly coupled in AoC puzzles.
+The naming convention is `yYYYYdDDpN` (year, day, part). Functions return a
+heap-allocated `AocValue`; the caller must call `aoc_value_free(val)` and
+then `free(val)`.
 
 ### Input Data (`data/YYYY/`)
 Raw input files from Advent of Code, organized by year and day.

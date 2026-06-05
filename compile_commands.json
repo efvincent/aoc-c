@@ -1,0 +1,5 @@
+[
+  {"directory":"/home/efvincent/code/c/aoc","file":"src/2015/day01.c","command":"gcc -std=c23 -Wall -Wextra -O2 -c src/2015/day01.c -o /dev/null"},
+  {"directory":"/home/efvincent/code/c/aoc","file":"src/common/aoc_value.c","command":"gcc -std=c23 -Wall -Wextra -O2 -c src/common/aoc_value.c -o /dev/null"},
+  {"directory":"/home/efvincent/code/c/aoc","file":"src/main.c","command":"gcc -std=c23 -Wall -Wextra -O2 -c src/main.c -o /dev/null"}
+]

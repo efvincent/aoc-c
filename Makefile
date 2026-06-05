@@ -51,3 +51,14 @@ clean:
 	rm -rf $(BUILDDIR)
 
 rebuild: clean all
+
+compile_commands.json:
+	@echo "[" > $@
+	@first=1; \
+	for src in $(SOURCES); do \
+	  if [ $$first -eq 0 ]; then echo "," >> $@; fi; \
+	  first=0; \
+	  printf '  {"directory":"%s","file":"%s","command":"%s %s -c %s -o /dev/null"}' "$(CURDIR)" "$$src" "$(CC)" "$(CFLAGS)" "$$src" >> $@; \
+	done
+	@echo "" >> $@
+	@echo "]" >> $@
