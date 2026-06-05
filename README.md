@@ -6,12 +6,12 @@ A self-contained C23 project for solving Advent of Code puzzles, designed as a l
 
 ```bash
 make              # Build the dispatcher executable
+make debug        # Build with debug symbols
 make test         # Run tests
 make clean        # Remove artifacts
 
-./build/aoc 2024 1      # Run 2024 day 1, both parts
-./build/aoc 2024 1 1    # Run 2024 day 1, part 1 only
-./build/aoc 2024 1 2    # Run 2024 day 1, part 2 only
+./build/aoc 2015 1 1    # Run 2015 day 1, part 1
+./build/aoc 2015 1 2    # Run 2015 day 1, part 2
 ```
 
 ## Documentation
@@ -42,19 +42,17 @@ make clean        # Remove artifacts
 ```
 aoc/
 ├── src/
-│   ├── main.c                  # CLI dispatcher (write this)
-│   ├── common/                 # Shared utilities
-│   │   ├── containers.h/c      # Dynamic arrays, stacks, queues
-│   │   ├── pathfinding.h/c     # Graph algorithms
-│   │   └── math_utils.h/c      # Math helpers
-│   └── YYYY/
-│       └── dayDD.c/h           # Puzzle solution (parsing + parts)
+│   ├── main.c                  # CLI dispatcher
+│   ├── common/
+│   │   └── aoc_value.h/c       # Tagged-union answer value type
+│   └── 2015/
+│       └── day01.c/h           # 2015 day 1 solution stub
 ├── data/
-│   └── YYYY/
-│       └── dayDD.txt           # Input files
+│   └── 2015/
+│       └── day01.txt           # Input file
 ├── tests/
-│   └── YYYY/
-│       └── dayDD_test.c        # Unit tests
+│   └── 2015/
+│       └── day01_test.c        # Unit tests
 ├── docs/                       # Documentation
 ├── Makefile                    # Build configuration
 └── README.md                   # This file
