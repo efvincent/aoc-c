@@ -15,6 +15,7 @@
  * @endcode
  */
 #include "common/aoc_value.h"
+#include "common/aoc_io.h"
 #include "2015/day01.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,7 +94,7 @@ int parseDay(const char *s) {
 int parsePart(const char *s) {
   int p = atoi(s);
   if (p == 0 || (p != 1 && p != 2)) {
-    fprintf(stderr, "Invalid part, must be 1 or 2: %s", s);
+    fprintf(stderr, "Invalid part, must be 1 or 2: %s\n", s);
     return -1;
   }
   return p;
@@ -124,8 +125,9 @@ FILE *getData(const int day, const int year) {
 /**
  * @brief Dispatch execution to the appropriate puzzle function.
  *
- * Looks up the puzzle for the given year, day, and part, opens its input
- * file, invokes the solution function, prints the result, and frees resources.
+* Looks up the puzzle for the given year, day, and part, opens and slurps its
+* input file, invokes the solution function, prints the result, and frees the
+* answer resources.
  *
  * On error (file not found, unimplemented puzzle), a message is printed and
  * the function returns without printing an answer.
@@ -138,24 +140,34 @@ void runPuzzle(const int day, const int year, const int part) {
   AocValue *val = NULL;
   switch (year) {
     case 2015: {
+
       FILE *file = getData(day, year);
       if (file == NULL) {
         fprintf(stderr, "Could not open data file for year %d day %d.\n", year, day);
         return;
       }
+
+      char *raw = slurp_file(file, NULL);
+      if (raw == NULL) {
+        fprintf(stderr, "Could not read data from data file for year %d day %d.\n", year, day);
+        fclose(file);
+        return;
+      }
+      
       switch (day) {
         case 1: {
           switch (part) {
             case 1: 
-              val = y2015d01p1(file);
+              val = y2015d01p1(raw);
               break;
             case 2: 
-              val = y2015d01p2(file);
+              val = y2015d01p2(raw);
               break;
             default:
               unreachable();
               return;
           }
+          free(raw);
           fclose(file);
           char *ans = aocValueToString(val);
           if (ans == NULL) {
@@ -169,6 +181,7 @@ void runPuzzle(const int day, const int year, const int part) {
           break;
         }
         default:
+          free(raw);
           fclose(file);
           fprintf(stderr, "Year %d, day %d not yet implemented.\n", year, day);
           return;
@@ -176,7 +189,7 @@ void runPuzzle(const int day, const int year, const int part) {
       break;
     }
     default:
-      printf("Year %d day %d not yet implemented.\n", year, day);
+      fprintf(stderr, "Year %d day %d not yet implemented.\n", year, day);
       return;
   }
 }

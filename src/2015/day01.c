@@ -11,41 +11,70 @@
  * aoc_value_free() then free() the returned pointer.
  */
 #include "day01.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "../common/aoc_value.h"
+#include "../common/aoc_io.h"
 
 // TODO: Implement parsing and solving
 
 /**
  * @brief Solve 2015 day 1 part 1.
  *
- * @param input_file Open file handle for the puzzle input. Must not be null.
+ * @param raw Null-terminated puzzle input string. Must not be null.
  * @return Heap-allocated AocValue (AOC_VALUE_I64) containing the answer.
  */
-AocValue *y2015d01p1(FILE *input_file) {
-    if (input_file == NULL) {
-        fprintf(stderr, "input file handle was null.\n");
+AocValue *y2015d01p1(const char *raw) {
+  char *cur = (char *)raw;
+  int floor = 0;
+  for (; *cur != '\0'; cur++) {
+    switch (*cur) {
+      case '(': {
+        floor += 1;
+        break;
+      }
+      case ')': {
+        floor -= 1;
+        break;
+      }
+      default:
+        unreachable();
     }
-    AocValue *val = malloc(sizeof(AocValue));
-    val->as.i64 = 1;
-    val->tag = AOC_VALUE_I64;
-    return val;
+  }
+  AocValue *val = malloc(sizeof(AocValue));
+  val->as.i64 = floor;
+  val->tag = AOC_VALUE_I64;
+  return val;
 }
 
 /**
  * @brief Solve 2015 day 1 part 2.
  *
- * @param input_file Open file handle for the puzzle input. Must not be null.
+ * @param raw Null-terminated puzzle input string. Must not be null.
  * @return Heap-allocated AocValue (AOC_VALUE_I64) containing the answer.
  */
-AocValue *y2015d01p2(FILE *input_file) {
-    if (input_file == NULL) {
-        fprintf(stderr, "input file handle was null.\n");
+AocValue *y2015d01p2(const char *raw) {
+  char *cur = (char *)raw;
+  int floor = 0;
+  int steps = 0;
+  for (; *cur != '\0'; cur++) {
+    steps += 1;
+    switch (*cur) {
+      case '(': {
+        floor += 1;
+        break;
+      }
+      case ')':
+        floor -= 1;
+        if (floor < 0) {
+          goto done;               
+        } 
+        break;
     }
-    AocValue *val = malloc(sizeof(AocValue));
-    val->as.i64 = 2;
-    val->tag = AOC_VALUE_I64;
-    return val;
+  }
+  done:
+  AocValue *val = malloc(sizeof(AocValue));
+  val->as.i64 = steps;
+  val->tag = AOC_VALUE_I64;
+  return val;
 }
