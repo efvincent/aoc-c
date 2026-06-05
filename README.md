@@ -25,7 +25,7 @@ make clean        # Remove artifacts
 
 **Single executable dispatcher** — One `aoc` binary interprets command-line arguments to run specific puzzles.
 
-**Modular utilities** — Common functionality (containers, pathfinding, math) organized in `src/common/` by category.
+**Modular utilities** — Shared helpers live in `src/common/` (currently `aoc_value`).
 
 **Per-year, per-day solutions** — Each puzzle lives in `src/YYYY/dayDD.c` with its header.
 

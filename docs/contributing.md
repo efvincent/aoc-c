@@ -7,7 +7,7 @@
 From Advent of Code, download the input for your puzzle and save it:
 
 ```
-data/2024/day01.txt
+data/YYYY/dayDD.txt
 ```
 
 ### 2. Create Puzzle Files
@@ -15,8 +15,8 @@ data/2024/day01.txt
 Create header and source files:
 
 ```
-src/2015/day01.h
-src/2015/day01.c
+src/YYYY/dayDD.h
+src/YYYY/dayDD.c
 ```
 
 ### 3. Write the Header
@@ -24,15 +24,15 @@ src/2015/day01.c
 Define the two exported functions:
 
 ```c
-// src/2015/day01.h
-#ifndef DAY_2015_01_H
-#define DAY_2015_01_H
+// src/2024/day01.h
+#ifndef DAY_2024_01_H
+#define DAY_2024_01_H
 
 #include <stdio.h>
 #include "../common/aoc_value.h"
 
-AocValue *y2015d01p1(FILE *input_file);
-AocValue *y2015d01p2(FILE *input_file);
+AocValue *y2024d01p1(FILE *input_file);
+AocValue *y2024d01p2(FILE *input_file);
 
 #endif
 ```
@@ -44,14 +44,14 @@ Function names follow the pattern: `yYYYYdDDpN` (year, day zero-padded, part).
 Implement parsing and solving in the source file:
 
 ```c
-// src/2015/day01.c
+// src/2024/day01.c
 #define _GNU_SOURCE
 #include "day01.h"
 #include "../common/aoc_value.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-AocValue *y2015d01p1(FILE *input_file) {
+AocValue *y2024d01p1(FILE *input_file) {
     AocValue *val = malloc(sizeof(AocValue));
     // Parse input_file and compute answer
     val->tag = AOC_VALUE_I64;
@@ -59,7 +59,7 @@ AocValue *y2015d01p1(FILE *input_file) {
     return val;
 }
 
-AocValue *y2015d01p2(FILE *input_file) {
+AocValue *y2024d01p2(FILE *input_file) {
     // Similar structure
     AocValue *val = malloc(sizeof(AocValue));
     val->tag = AOC_VALUE_I64;
@@ -80,7 +80,7 @@ Add the puzzle to the year/day switch in `src/main.c`:
 
 ```c
 // Inside runPuzzle(), in the case 2015: block:
-case 1: {
+./build/aoc 2024 1 1
     switch (part) {
         case 1: val = y2015d01p1(file); break;
         case 2: val = y2015d01p2(file); break;
@@ -130,7 +130,7 @@ Add a new utility module when:
 
 ### 1. Choose a Category
 
-Existing categories:
+Suggested categories:
 - **containers** — Dynamic arrays, linked lists, stacks, queues, hash tables
 - **pathfinding** — BFS, DFS, A*, Dijkstra
 - **math_utils** — GCD, LCM, modular arithmetic, primes
@@ -191,10 +191,14 @@ Include the header in your puzzle solution:
 // src/2024/day01.c
 #include "../common/containers.h"
 
-void day_2024_01_part1(FILE *input_file) {
+AocValue *y2024d01p1(FILE *input_file) {
     IntVector *nums = int_vector_create(100);
     // ... use vector
     int_vector_free(nums);
+    AocValue *val = malloc(sizeof(AocValue));
+    val->tag = AOC_VALUE_I64;
+    val->as.i64 = 0;
+    return val;
 }
 ```
 

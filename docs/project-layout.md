@@ -5,19 +5,19 @@
 ```
 src/
   main.c              # CLI dispatcher — parses arguments and routes to puzzle
-  src/common/
+  common/
     aoc_value.h / aoc_value.c  # Tagged-union answer value type (AocValue)
   2015/
     day01.c           # Puzzle solution for 2015 day 1
     day01.h           # Exports: y2015d01p1(), y2015d01p2()
 
-  data/
-    2015/
-      day01.txt
+data/
+  2015/
+    day01.txt
 
-  tests/
-    2015/
-      day01_test.c      # Unit tests for 2015 day 1
+tests/
+  2015/
+    day01_test.c      # Unit tests for 2015 day 1
 
 docs/                 # Documentation
   project-layout.md   # This file

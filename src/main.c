@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 
 /** @brief Maximum supported puzzle year. */
 const int MAX_YEAR=2025;
@@ -106,11 +107,14 @@ int parsePart(const char *s) {
  *
  * @param day  Puzzle day (1–25).
  * @param year Puzzle year (e.g. 2015).
- * @return Open FILE handle on success, or null if the file cannot be opened.
+ * @return Open FILE handle on success, or null if path formatting fails or
+ *         the file cannot be opened.
  */
 FILE *getData(const int day, const int year) {
   char *fn;
-  asprintf(&fn, "data/%d/day%02d.txt", year, day);
+  if (asprintf(&fn, "data/%d/day%02d.txt", year, day) < 0) {
+    return NULL;
+  }
   FILE *file = fopen(fn, "r");
   free(fn);
   return file;
@@ -123,8 +127,8 @@ FILE *getData(const int day, const int year) {
  * Looks up the puzzle for the given year, day, and part, opens its input
  * file, invokes the solution function, prints the result, and frees resources.
  *
- * On error (file not found, unimplemented puzzle), a message is written to
- * stderr and the function returns without printing an answer.
+ * On error (file not found, unimplemented puzzle), a message is printed and
+ * the function returns without printing an answer.
  *
  * @param day  Puzzle day (1–25).
  * @param year Puzzle year (e.g. 2015).
@@ -149,18 +153,24 @@ void runPuzzle(const int day, const int year, const int part) {
               val = y2015d01p2(file);
               break;
             default:
+              unreachable();
               return;
           }
           fclose(file);
           char *ans = aocValueToString(val);
-          printf("Year %d day %d part %d answer: %s\n", year, day, part, ans);
-          free(ans);
+          if (ans == NULL) {
+            fprintf(stderr, "failed to format answer for year %d day %d part %d.\n", year, day, part);
+          } else {
+            printf("Year %d day %d part %d answer: %s\n", year, day, part, ans);
+            free(ans);
+          }
           aoc_value_free(val);
           free(val);
           break;
         }
         default:
-          printf("Year %d, day %d not yet implemented.\n", year, day);
+          fclose(file);
+          fprintf(stderr, "Year %d, day %d not yet implemented.\n", year, day);
           return;
       }
       break;

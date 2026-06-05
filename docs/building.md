@@ -14,6 +14,7 @@ make clean          # Remove all build artifacts
 make rebuild        # Clean and build
 make test           # Compile and run tests
 make debug          # Build with debug symbols (-g) and no optimization (-O0)
+make compile_commands.json  # Generate compile database for IDE tooling
 ```
 
 ## Build Configuration
@@ -76,7 +77,7 @@ All `.o` files are linked together with the C standard library into a single exe
 - Your `main.c` dispatcher must construct the correct path
 
 **Compilation errors with includes:**
-- Ensure headers use relative includes: `#include "common/containers.h"` or similar
+- Ensure headers use correct relative includes: `#include "../common/aoc_value.h"` or similar
 - The Makefile doesn't add special `-I` flags; adjust as needed if includes fail
 
 **Missing symbols at link time:**
