@@ -28,11 +28,10 @@ Define the two exported functions:
 #ifndef DAY_2024_01_H
 #define DAY_2024_01_H
 
-#include <stdio.h>
 #include "../common/aoc_value.h"
 
-AocValue *y2024d01p1(FILE *input_file);
-AocValue *y2024d01p2(FILE *input_file);
+AocValue *y2024d01p1(const char *raw);
+AocValue *y2024d01p2(const char *raw);
 
 #endif
 ```
@@ -45,21 +44,19 @@ Implement parsing and solving in the source file:
 
 ```c
 // src/2024/day01.c
-#define _GNU_SOURCE
 #include "day01.h"
 #include "../common/aoc_value.h"
-#include <stdio.h>
 #include <stdlib.h>
 
-AocValue *y2024d01p1(FILE *input_file) {
+AocValue *y2024d01p1(const char *raw) {
     AocValue *val = malloc(sizeof(AocValue));
-    // Parse input_file and compute answer
+    // Iterate through raw string and compute answer
     val->tag = AOC_VALUE_I64;
     val->as.i64 = 0;  // replace with real answer
     return val;
 }
 
-AocValue *y2024d01p2(FILE *input_file) {
+AocValue *y2024d01p2(const char *raw) {
     // Similar structure
     AocValue *val = malloc(sizeof(AocValue));
     val->tag = AOC_VALUE_I64;
@@ -69,7 +66,8 @@ AocValue *y2024d01p2(FILE *input_file) {
 ```
 
 **Tips:**
-- Read input using `fgets()`, `fscanf()`, or character-by-character with `fgetc()`
+- Iterate through the null-terminated `raw` string using pointer arithmetic or indexing
+- Parse characters using standard operations (no special file I/O needed)
 - Use only the C standard library (no external libraries)
 - Return answer as an `AocValue`; the dispatcher prints and frees it
 - Manage memory carefully: every `malloc` needs a matching `free`

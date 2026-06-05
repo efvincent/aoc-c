@@ -45,8 +45,9 @@ aoc <year>                # validate year argument
 
 The dispatcher:
 - Opens `data/YYYY/dayDD.txt` for the requested puzzle
-- Calls `yYYYYdDDpN(file)` and prints the returned `AocValue`
-- Calls `aoc_value_free()` and `free()` to clean up
+- Reads the entire file into a null-terminated string using `slurp_file()`
+- Calls `yYYYYdDDpN(raw)` with the input string and prints the returned `AocValue`
+- Frees the input buffer and calls `aoc_value_free()` and `free()` to clean up
 
 ### Common Utilities (`src/common/`)
 Shared code organized by category. Currently contains:
@@ -65,8 +66,8 @@ One file per puzzle containing:
 Each puzzle exports two functions:
 ```c
 // In src/2015/day01.h
-AocValue *y2015d01p1(FILE *input_file);
-AocValue *y2015d01p2(FILE *input_file);
+AocValue *y2015d01p1(const char *raw);
+AocValue *y2015d01p2(const char *raw);
 ```
 
 The naming convention is `yYYYYdDDpN` (year, day, part). Functions return a
