@@ -40,10 +40,13 @@ void aoc_value_free(AocValue *v) {
  * @brief Make a heap-allocated C string representation of an AocValue.
  *
  * The caller is responsible for freeing the returned string.
- * Returns null if val is null or the tag is unrecognized.
  *
- * @param val The AocValue to convert; may be null.
- * @return Heap-allocated string; caller must free. Null on unrecognized tag.
+ * Preconditions:
+ * - val must not be null
+ * - val->tag must be one of AOC_VALUE_I64, AOC_VALUE_U64, AOC_VALUE_STR
+ *
+ * @param val The AocValue to convert.
+ * @return Heap-allocated string; caller must free.
  */
 char *aocValueToString(const AocValue *val) {
   char *s;
