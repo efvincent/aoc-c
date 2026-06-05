@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 /**
  * @file aoc_value.c
  * @brief Implementation of tagged value resource-management helpers.
@@ -10,7 +11,9 @@
  * - String values may own as.str when tag is AOC_VALUE_STR.
  */
 #include "aoc_value.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief Release any owned storage held by an AocValue.
@@ -31,4 +34,34 @@ void aoc_value_free(AocValue *v) {
 
   v->tag = AOC_VALUE_I64;
   v->as.i64 = 0;
+}
+
+/**
+ * @brief Make a heap-allocated C string representation of an AocValue.
+ *
+ * The caller is responsible for freeing the returned string.
+ *
+ * Preconditions:
+ * - val must not be null
+ * - val->tag must be one of AOC_VALUE_I64, AOC_VALUE_U64, AOC_VALUE_STR
+ *
+ * @param val The AocValue to convert.
+ * @return Heap-allocated string; caller must free.
+ */
+char *aocValueToString(const AocValue *val) {
+  char *s;
+  switch (val->tag) {
+    case AOC_VALUE_I64: 
+      asprintf(&s, "%ld", val->as.i64);
+      break;
+    
+    case AOC_VALUE_U64: 
+      asprintf(&s, "%lu", val->as.u64);
+      break;
+
+    case AOC_VALUE_STR:
+      asprintf(&s, "%s", val->as.str);
+      break;
+  }
+  return s;
 }

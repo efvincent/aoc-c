@@ -14,6 +14,7 @@ make clean          # Remove all build artifacts
 make rebuild        # Clean and build
 make test           # Compile and run tests
 make debug          # Build with debug symbols (-g) and no optimization (-O0)
+make compile_commands.json  # Generate compile database for IDE tooling
 ```
 
 ## Build Configuration
@@ -28,8 +29,9 @@ make debug          # Build with debug symbols (-g) and no optimization (-O0)
 ```
 build/
   aoc               # Main executable
-  *.o               # Object files
-  tests             # Test executable (if tests exist)
+  tests_runner      # Test executable (if tests exist)
+  2015/             # Object files mirroring src layout
+  common/
 ```
 
 ## Running Puzzles
@@ -37,9 +39,9 @@ build/
 After building, run the dispatcher:
 
 ```bash
-./build/aoc 2024 1      # Run 2024 day 1, both parts
-./build/aoc 2024 1 1    # Run 2024 day 1, part 1 only
-./build/aoc 2024 1 2    # Run 2024 day 1, part 2 only
+./build/aoc 2015 1 1    # Run 2015 day 1, part 1
+./build/aoc 2015 1 2    # Run 2015 day 1, part 2
+./build/aoc 2024 1 1    # Run 2024 day 1, part 1 (once implemented)
 ```
 
 ## Running Tests
@@ -54,10 +56,11 @@ Tests are autodiscovered from `tests/YYYY/` and compiled into a single test exec
 
 ### Source Discovery
 
-The Makefile uses glob patterns to automatically discover:
-- **Source files:** `$(wildcard src/**/*.c)` — all `.c` files under `src/`
-- **Test files:** `$(wildcard tests/**/*.c)` — all `.c` files under `tests/`
-- **Headers:** All `.h` files in the same directory or via `-I` flags
+The Makefile uses `find` to recursively discover all `.c` files:
+- **Source files:** `find src -type f -name '*.c'` — all `.c` files under `src/`
+- **Test files:** `find tests -type f -name '*.c'` — all `.c` files under `tests/`
+
+Adding a new `.c` file anywhere under `src/` or `tests/` is sufficient; no Makefile edits needed.
 
 ### Object Files
 
@@ -74,7 +77,7 @@ All `.o` files are linked together with the C standard library into a single exe
 - Your `main.c` dispatcher must construct the correct path
 
 **Compilation errors with includes:**
-- Ensure headers use relative includes: `#include "common/containers.h"` or similar
+- Ensure headers use correct relative includes: `#include "../common/aoc_value.h"` or similar
 - The Makefile doesn't add special `-I` flags; adjust as needed if includes fail
 
 **Missing symbols at link time:**
