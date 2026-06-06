@@ -191,6 +191,8 @@ void runPuzzle(const int day, const int year, const int part) {
               break;
             default:
               unreachable();
+              free(raw);
+              fclose(file);
               return;
           }
           free(raw);
