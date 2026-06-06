@@ -22,7 +22,7 @@ typedef struct {
   int y;
 } Point;
 
-void modPoint(Point *p, const char *c) {
+static void modPoint(Point *p, const char *c) {
   switch (*c) {
     case '^': {
       p->y -= 1;
@@ -43,7 +43,7 @@ void modPoint(Point *p, const char *c) {
   }
 } 
 
-uint64_t key_create(int x, int y) {
+static uint64_t key_create(int x, int y) {
   return ((uint64_t)(uint32_t)x << 32) | (uint32_t)y;
 }
 
@@ -57,12 +57,12 @@ uint64_t key_create(int x, int y) {
 AocValue *y2015d03p1(const char *raw) {
     AocValue *val = malloc(sizeof(AocValue));
     // Start at house (0, 0) and count unique positions visited.
-    // For each character: '^' -> y++, 'v' -> y--, '<' -> x--, '>' -> x++
+    // For each character: '^' -> y-- 'v' -> y++ '<' -> x--, '>' -> x++
     Point p = { .x = 0, .y = 0};
     HashSet *set = set_create(2000);
     set_insert(set, key_create(p.x, p.y));
     size_t count = 1;
-    char *cur = (char *)raw;
+    const char *cur = raw;
     for(; *cur != '\0'; cur++) {
       modPoint(&p, cur);
       uint64_t key = key_create(p.x, p.y);
@@ -93,7 +93,7 @@ AocValue *y2015d03p2(const char *raw) {
     set_insert(set, key_create(0,0));
     size_t count = 1;
     bool roboTurn = false;
-    char *cur = (char *)raw;
+    const char *cur = raw;
     for (; *cur != '\0'; cur++) {
       uint64_t key;
       if (roboTurn) {
