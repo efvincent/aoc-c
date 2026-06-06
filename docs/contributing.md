@@ -77,14 +77,21 @@ AocValue *y2024d01p2(const char *raw) {
 Add the puzzle to the year/day switch in `src/main.c`:
 
 ```c
-// Inside runPuzzle(), in the case 2015: block:
-./build/aoc 2024 1 1
-    switch (part) {
-        case 1: val = y2015d01p1(file); break;
-        case 2: val = y2015d01p2(file); break;
-        default: return;
-    }
-    // ... print, free (already handled by dispatcher)
+// At top of src/main.c:
+#include "2024/day01.h"
+
+// Inside runPuzzle(), once input has been slurped into `raw`:
+switch (day) {
+    case 1:
+        switch (part) {
+            case 1: val = y2024d01p1(raw); break;
+            case 2: val = y2024d01p2(raw); break;
+            default: return;
+        }
+        break;
+    default:
+        // not implemented yet
+        return;
 }
 ```
 
@@ -189,9 +196,9 @@ Include the header in your puzzle solution:
 // src/2024/day01.c
 #include "../common/containers.h"
 
-AocValue *y2024d01p1(FILE *input_file) {
+AocValue *y2024d01p1(const char *raw) {
     IntVector *nums = int_vector_create(100);
-    // ... use vector
+    // ... parse and use data from raw
     int_vector_free(nums);
     AocValue *val = malloc(sizeof(AocValue));
     val->tag = AOC_VALUE_I64;

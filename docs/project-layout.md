@@ -6,18 +6,26 @@
 src/
   main.c              # CLI dispatcher — parses arguments and routes to puzzle
   common/
+    aoc_io.h / aoc_io.c        # Read entire input streams into strings
     aoc_value.h / aoc_value.c  # Tagged-union answer value type (AocValue)
+    bitset.h                   # Header-only packed bitset helpers
+    hash_set.h / hash_set.c    # Open-addressed uint64_t hash set
   2015/
     day01.c           # Puzzle solution for 2015 day 1
     day01.h           # Exports: y2015d01p1(), y2015d01p2()
+    day03.c           # Puzzle solution for 2015 day 3
+    day03.h           # Exports: y2015d03p1(), y2015d03p2()
 
 data/
   2015/
     day01.txt
+    day02.txt
+    day03.txt
 
 tests/
   2015/
     day01_test.c      # Unit tests for 2015 day 1
+    day03_test.c      # Unit tests for 2015 day 3
 
 docs/                 # Documentation
   project-layout.md   # This file
@@ -52,10 +60,13 @@ The dispatcher:
 ### Common Utilities (`src/common/`)
 Shared code organized by category. Currently contains:
 
+- **aoc_io.h/c** — Input loading helper (`slurp_file`)
 - **aoc_value.h/c** — Tagged-union answer type (`AocValue`) and helpers
+- **bitset.h** — Header-only packed bitset helpers
+- **hash_set.h/c** — Open-addressed set for `uint64_t` keys
 
-As puzzles grow, additional modules will be added here (e.g., containers, pathfinding, math helpers).
-Each category should be a separate header/source pair.
+As puzzles grow, additional modules can be added as separate headers/sources,
+or as header-only helpers when the API is small and inlinable.
 
 ### Puzzle Solutions (`src/YYYY/dayDD.c/h`)
 One file per puzzle containing:
