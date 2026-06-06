@@ -17,6 +17,7 @@
 #include "common/aoc_value.h"
 #include "common/aoc_io.h"
 #include "2015/day01.h"
+#include "2015/day03.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -162,6 +163,31 @@ void runPuzzle(const int day, const int year, const int part) {
               break;
             case 2: 
               val = y2015d01p2(raw);
+              break;
+            default:
+              unreachable();
+              return;
+          }
+          free(raw);
+          fclose(file);
+          char *ans = aocValueToString(val);
+          if (ans == NULL) {
+            fprintf(stderr, "failed to format answer for year %d day %d part %d.\n", year, day, part);
+          } else {
+            printf("Year %d day %d part %d answer: %s\n", year, day, part, ans);
+            free(ans);
+          }
+          aoc_value_free(val);
+          free(val);
+          break;
+        }
+        case 3: {
+          switch (part) {
+            case 1:
+              val = y2015d03p1(raw);
+              break;
+            case 2:
+              val = y2015d03p2(raw);
               break;
             default:
               unreachable();
