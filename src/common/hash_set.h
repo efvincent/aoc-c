@@ -13,22 +13,9 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-/**
- * @brief Mutable hash set storing unique uint64_t keys.
- *
- * Invariants:
- * - capacity is always a power of two.
- * - count is the number of occupied slots.
- * - occupied stores packed occupancy bits for table slots.
- * - A set occupancy bit for slot i means keys[i] contains a valid key.
- */
-typedef struct {
-  uint64_t *keys;
-  uint64_t *occupied;
-  size_t capacity;
-  size_t count;
-} HashSet;
+typedef struct HashSet HashSet;
 
 /**
  * @brief Allocate a hash set with at least the requested capacity.

@@ -12,6 +12,22 @@
 #include "bitset.h"
 
 /**
+ * @brief Mutable hash set storing unique uint64_t keys.
+ *
+ * Invariants:
+ * - capacity is always a power of two.
+ * - count is the number of occupied slots.
+ * - occupied stores packed occupancy bits for table slots.
+ * - A set occupancy bit for slot i means keys[i] contains a valid key.
+ */
+struct HashSet {
+  uint64_t *keys;
+  uint64_t *occupied;
+  size_t capacity;
+  size_t count;
+};
+
+/**
  * @brief Mix a 64-bit key into a well-distributed hash value.
  *
  * The table masks the result with capacity - 1, so good bit diffusion across
@@ -76,13 +92,23 @@ static void set_resize(HashSet *set) {
   uint64_t *oldOccupied = set->occupied;
 
   // double capacity, allocate space for keys and occupied flags
-  set->capacity *= 2;
-  set->count = 0;
-  set->keys     = malloc(set->capacity * sizeof(uint64_t));
-  set->occupied = calloc(bitset_word_count(set->capacity), sizeof(uint64_t));
+  size_t newCap = set->capacity * 2;
+  uint64_t *newKeys = malloc(newCap * sizeof(uint64_t));
+  uint64_t *newOccupied = calloc(bitset_word_count(newCap), sizeof(uint64_t));
+  
+  // if any of the allocations failed, free what we allocated and return original set
+  if (newKeys == NULL || newOccupied == NULL) {
+    free(newKeys);
+    free(newOccupied);
+    return;
+  }
 
-  // restore old keys where occupied
-  set->count = 0;   // Reset count, re-insert will increment it
+  set->capacity = newCap;
+  set->keys     = newKeys;
+  set->occupied = newOccupied;
+
+  // restore old keys where occupied and reset count, re-insert will increment it
+  set->count = 0;   
   for (size_t i = 0; i < oldCap; i++) {
     if (bitset_test(oldOccupied, i)) {
       set_insert(set, oldKeys[i]);
@@ -101,7 +127,7 @@ bool set_insert(HashSet *set, uint64_t key) {
   } 
 
   // determine the index to be used for the key
-  uint64_t idx = hash(key) & (set->capacity - 1);
+  size_t idx = hash(key) & (set->capacity - 1);
   
   // probe for unoccupied slot, leaving idx at the first empty slot
   while (bitset_test(set->occupied, idx)) {
