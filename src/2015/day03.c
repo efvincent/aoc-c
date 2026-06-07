@@ -56,10 +56,17 @@ static uint64_t key_create(int x, int y) {
  */
 AocValue *y2015d03p1(const char *raw) {
     AocValue *val = malloc(sizeof(AocValue));
+    if (val == NULL) {
+      return NULL;
+    }
     // Start at house (0, 0) and count unique positions visited.
     // For each character: '^' -> y-- 'v' -> y++ '<' -> x--, '>' -> x++
     Point p = { .x = 0, .y = 0};
     HashSet *set = set_create(2000);
+    if (set == NULL) {
+      free(val);
+      return NULL;
+    }
     set_insert(set, key_create(p.x, p.y));
     size_t count = 1;
     const char *cur = raw;
@@ -87,13 +94,22 @@ AocValue *y2015d03p1(const char *raw) {
  */
 AocValue *y2015d03p2(const char *raw) {
     AocValue *val = malloc(sizeof(AocValue));
+    if (val == NULL) {
+      return NULL;
+    }
+    
     Point santa = { .x = 0, .y = 0};
     Point robo  = { .x = 0, .y = 0};
+    
     HashSet *set = set_create(2000);
+    if (set == NULL) {
+      return NULL;
+    }
     set_insert(set, key_create(0,0));
     size_t count = 1;
     bool roboTurn = false;
     const char *cur = raw;
+    
     for (; *cur != '\0'; cur++) {
       uint64_t key;
       if (roboTurn) {
@@ -108,6 +124,7 @@ AocValue *y2015d03p2(const char *raw) {
       }
       roboTurn = !roboTurn;
     }
+    
     set_free(set);
     val->as.i64 = count;
     val->tag = AOC_VALUE_I64;

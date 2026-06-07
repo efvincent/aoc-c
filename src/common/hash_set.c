@@ -127,14 +127,22 @@ bool set_insert(HashSet *set, uint64_t key) {
   } 
 
   // determine the index to be used for the key
-  size_t idx = hash(key) & (set->capacity - 1);
-  
+  size_t mask = set->capacity - 1;
+  size_t idx = hash(key) & mask;
+  size_t start = idx;
+
   // probe for unoccupied slot, leaving idx at the first empty slot
   while (bitset_test(set->occupied, idx)) {
     if (set->keys[idx] == key) {
       return false;
     }
-    idx = (idx + 1) & (set->capacity - 1);
+    // if set_resize fails with OOM, set_insert would keep probing
+    // and never find an empty slot, and spin forever. Adding
+    // wrap around detection -> hard fail prevents an infinite loop.
+    idx = (idx + 1) & mask;
+    if (idx == start) {
+      unreachable();
+    }
   }
 
   set->keys[idx] = key;
@@ -145,6 +153,9 @@ bool set_insert(HashSet *set, uint64_t key) {
 
 /** @copydoc set_free */
 void set_free(HashSet *set) {
+  if (set == NULL) {
+    return;
+  }
   free(set->keys);
   free(set->occupied);
   free(set);
