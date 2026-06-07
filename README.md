@@ -7,11 +7,12 @@ A self-contained C23 project for solving Advent of Code puzzles, designed as a l
 ```bash
 make              # Build the dispatcher executable
 make debug        # Build with debug symbols
-make test         # Run tests
+make test         # Build and run tests (currently requires a single test main)
 make clean        # Remove artifacts
 
 ./build/aoc 2015 1 1    # Run 2015 day 1, part 1
 ./build/aoc 2015 1 2    # Run 2015 day 1, part 2
+./build/aoc 2015 3 1    # Run 2015 day 3, part 1
 ```
 
 ## Documentation
@@ -25,7 +26,7 @@ make clean        # Remove artifacts
 
 **Single executable dispatcher** — One `aoc` binary interprets command-line arguments to run specific puzzles.
 
-**Modular utilities** — Shared helpers live in `src/common/` (currently `aoc_value`).
+**Modular utilities** — Shared helpers live in `src/common/` (currently `aoc_io`, `aoc_value`, `bitset`, and `hash_set`).
 
 **Per-year, per-day solutions** — Each puzzle lives in `src/YYYY/dayDD.c` with its header.
 
@@ -44,15 +45,22 @@ aoc/
 ├── src/
 │   ├── main.c                  # CLI dispatcher
 │   ├── common/
-│   │   └── aoc_value.h/c       # Tagged-union answer value type
+│   │   ├── aoc_io.h/c          # Input slurp helper
+│   │   ├── aoc_value.h/c       # Tagged-union answer value type
+│   │   ├── bitset.h            # Header-only packed bitset helpers
+│   │   └── hash_set.h/c        # Open-addressed uint64 hash set
 │   └── 2015/
-│       └── day01.c/h           # 2015 day 1 solution stub
+│       ├── day01.c/h           # 2015 day 1
+│       └── day03.c/h           # 2015 day 3
 ├── data/
 │   └── 2015/
-│       └── day01.txt           # Input file
+│       ├── day01.txt           # Input file
+│       ├── day02.txt           # Input file
+│       └── day03.txt           # Input file
 ├── tests/
 │   └── 2015/
-│       └── day01_test.c        # Unit tests
+│       ├── day01_test.c        # Unit tests
+│       └── day03_test.c        # Unit tests
 ├── docs/                       # Documentation
 ├── Makefile                    # Build configuration
 └── README.md                   # This file

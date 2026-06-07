@@ -12,7 +12,7 @@ The Makefile automatically finds all `.c` files in `src/` and compiles them toge
 make                # Default: build the aoc executable
 make clean          # Remove all build artifacts
 make rebuild        # Clean and build
-make test           # Compile and run tests
+make test           # Compile and run tests_runner
 make debug          # Build with debug symbols (-g) and no optimization (-O0)
 make compile_commands.json  # Generate compile database for IDE tooling
 ```
@@ -50,7 +50,14 @@ After building, run the dispatcher:
 make test           # Compile tests and run
 ```
 
-Tests are autodiscovered from `tests/YYYY/` and compiled into a single test executable.
+Tests are autodiscovered from `tests/YYYY/` and linked into a single
+`build/tests_runner` executable.
+
+Current limitation:
+- Because all test sources are linked into one executable, the set of test
+  files must provide exactly one `main` symbol.
+- If multiple test files each define `main`, linking fails with a
+  "multiple definition of main" error.
 
 ## Compilation Details
 
@@ -83,6 +90,10 @@ All `.o` files are linked together with the C standard library into a single exe
 **Missing symbols at link time:**
 - Ensure `.c` files are in `src/` or `src/YYYY/` — the Makefile discovers them automatically
 - Check that function definitions match declarations in `.h` files
+
+**"multiple definition of main" during `make test`:**
+- Consolidate tests under a single test runner `main`, or convert per-file
+  tests to helper functions called by one runner.
 
 ## Customizing the Build
 

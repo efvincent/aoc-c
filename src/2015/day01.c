@@ -14,7 +14,6 @@
 #include <stdlib.h>
 
 #include "../common/aoc_value.h"
-#include "../common/aoc_io.h"
 
 // TODO: Implement parsing and solving
 
